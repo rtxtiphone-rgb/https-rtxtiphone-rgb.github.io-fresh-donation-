@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>เมนูชุมชน — เข้าร่วม & สนับสนุน</title>
+  <meta name="description" content="เมนูชุมชน — ลิงก์ Discord และช่องทางบริจาค สนับสนุนผู้พัฒนาและเข้าร่วมชุมชนได้ที่นี่" />
+  <style>
+    :root{
+      --bg-1:#07101a;
+      --bg-2:#0f1724;
+      --card:#0b1220;
+      --accent1:#7be0ff;
+      --accent2:#ff7aa2;
+      --muted:#9fb0bf;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      --container:1100px;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 70%);
+      color:#eaf4ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+    .container{
+      width:100%;
+      max-width:var(--container);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius:20px;
+      padding:28px;
+      box-shadow: 0 20px 60px rgba(2,8,20,0.7);
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap:28px;
+    }
+
+    /* Left column (buttons) */
+    .left {
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      align-items:center;
+      padding:8px;
+    }
+    .brand {
+      width:100%;
+      text-align:center;
+      padding:14px 8px;
+      border-radius:12px;
+      background: linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#021020;
+      font-weight:700;
+      box-shadow: 0 8px 30px rgba(2,8,20,0.6);
+    }
+
+    .btn {
+      width:100%;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      border-radius:12px;
+      text-decoration:none;
+      color:inherit;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,0.04);
+      transition:transform .18s ease, box-shadow .18s ease;
+      background:var(--card);
+    }
+    .btn:hover{ transform:translateY(-4px); box-shadow:0 10px 30px rgba(2,8,20,0.6) }
+    .btn .icon{ font-size:1.3rem }
+
+    .btn-discord{
+      background: linear-gradient(135deg,#5865F2,#4752C4);
+      color:#fff;
+      border-color: rgba(88,101,242,0.6);
+    }
+    .btn-donate{
+      background: linear-gradient(135deg,#2d2d2d,#1a1a1a);
+      color:#fff;
+    }
+    .btn-copy{
+      background: linear-gradient(135deg,#24303a,#1a2329);
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    /* Right column (intro + links) */
+    .right {
+      padding:12px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    h1{ font-size:1.65rem; margin:0 0 10px 0; letter-spacing:.4px }
+    p{ margin:0 0 12px 0; color:var(--muted); line-height:1.6 }
+
+    .highlight{ color:var(--accent1); font-weight:700 }
+
+    .discord-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px }
+    .discord-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px;
+      border-radius:12px;
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .discord-meta{ display:flex; gap:10px; align-items:center }
+    .discord-meta .name{ font-weight:700 }
+    .discord-meta .desc{ color:var(--muted); font-size:.95rem }
+
+    .small { font-size:0.9rem; color:var(--muted) }
+
+    footer.site-foot{ text-align:center; color:var(--muted); font-size:0.85rem; margin-top:8px }
+
+    /* toast */
+    .toast {
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background:linear-gradient(90deg,#102433,#153347);
+      color:#e6f6ff;
+      padding:10px 14px;
+      border-radius:10px;
+      box-shadow:0 8px 24px rgba(2,8,20,0.6);
+      transform:translateY(12px);
+      opacity:0;
+      transition:all .22s ease;
+      pointer-events:none;
+    }
+    .toast.show{ opacity:1; transform:translateY(0) }
+
+    /* responsive */
+    @media (max-width:900px){
+      .container{ grid-template-columns: 1fr; padding:18px }
+      .left{ flex-direction:row; justify-content:center }
+      .left .btn{ max-width:240px }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main" aria-labelledby="page-title">
+    <section class="left" aria-label="เมนูลิงก์">
+      <div class="brand" id="page-title">เมนูชุมชน</div>
+
+      <a class="btn btn-discord" id="discord-join" href="https://discord.gg/PUT_YOUR_INVITE" target="_blank" rel="noopener noreferrer" aria-label="เข้าร่วม Discord ของเรา">
+        <span class="icon" aria-hidden>💬</span>
+        <span>เข้าร่วม Discord</span>
+      </a>
+
+      <button class="btn btn-copy" id="copy-discord" aria-label="คัดลอกลิงก์ Discord">
+        <span class="icon" aria-hidden>🔗</span>
+        <span>คัดลอกลิงก์เชิญ</span>
+      </button>
+
+      <a class="btn btn-donate" id="donate" href="https://ezdn.app/id1309927191" target="_blank" rel="noopener noreferrer" aria-label="บริจาค">
+        <span class="icon" aria-hidden>💖</span>
+        <span>บริจาค</span>
+      </a>
+    </section>
+
+    <section class="right" aria-label="ข้อมูลต้อนรับ">
+      <div class="card" aria-hidden="false">
+        <h1>ยินดีต้อนรับสู่เมนูชุมชน</h1>
+        <p>สวัสดีครับ/ค่ะ — ยินดีต้อนรับทุกคนที่แวะเข้ามา หน้าเพจนี้รวบรวมลิงก์สำคัญเพื่อให้คุณเข้าร่วมชุมชนและสนับสนุนผลงานได้ง่าย ๆ</p>
+        <p class="small">ผู้พัฒนา: GanT</p>
+      </div>
+
+      <div class="card" aria-label="ลิงก์ Discord">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>ลิงก์ Discord</strong>
+          <span class="small">คลิก "เข้าร่วม" หรือ "คัดลอก" เพื่อแชร์</span>
+        </div>
+
+        <div class="discord-list" id="discord-list">
+          <div class="discord-item">
+            <div class="discord-meta">
+              <div class="icon" aria-hidden>💫</div>
+              <div>
+                <div class="name">ชุมชนหลัก</div>
+                <div class="desc">คุยทั่วไป </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <a class="btn" href="https://discord.gg/bCMKx5ebeR" target="_blank" rel="noopener noreferrer">เข้าร่วม</a>
+              <button class="btn btn-copy" data-link="https://discord.gg/PUT_INVITE_1">คัดลอก</button>
+            </div>
+          </div>
+
+          <div class="discord-item">
+            <div class="discord-meta">
+              <div class="icon" aria-hidden>⭐</div>
+              <div>
+                <div class="name">ดิสobby</div>
+                <div class="desc">ช่องทางแจ้งobby</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <a class="btn" href="https://discord.gg/5hMCXGreT" target="_blank" rel="noopener noreferrer">เข้าร่วม</a>
+              <button class="btn btn-copy" data-link="https://discord.gg/PUT_INVITE_2">คัดลอก</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" aria-label="ข้อมูลการสนับสนุน">
+        <strong>สนับสนุน</strong>
+        <p class="small">หากต้องการสนับสนุนผลงาน สามารถบริจาคผ่านลิงก์ด้านซ้าย หรือบอกผมให้เพิ่มช่องทางไทย (พร้อมเพย์, ทรูมันนี่, QR) ให้ได้</p>
+        <div class="site-foot">ขอบคุณสำหรับทุกการสนับสนุน 💖</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy-to-clipboard (สำหรับปุ่มคัดลอกแยกในรายการ)
+    function showToast(text){
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.add('show');
+      clearTimeout(t._hide);
+      t._hide = setTimeout(()=> t.classList.remove('show'), 2600);
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.btn-copy');
+      if(!btn) return;
+      const link = btn.dataset.link || document.getElementById('discord-join').href;
+      if(!link) return showToast('ไม่มีลิงก์ให้คัดลอก');
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(link).then(()=> {
+          showToast('คัดลอกลิงก์แล้ว: ' + link);
+        }).catch(()=> {
+          showToast('ไม่สามารถคัดลอกอัตโนมัติได้ — โปรดคัดลอกด้วยตนเอง');
+        });
+      } else {
+        // fallback
+        const ok = prompt('คัดลอกลิงก์นี้:', link);
+        if(ok !== null) showToast('ลิงก์ถูกคัดลอก (แบบ fallback)');
+      }
+    });
+
+    // Smooth open external links with a short fade (non-blocking)
+    document.querySelectorAll('a[target="_blank"]').forEach(a=>{
+      a.addEventListener('click', (ev)=>{
+        // allow normal behavior; we don't delay navigation to avoid popup blockers
+        // but we add a small visual effect (optional)
+        const el = document.querySelector('.container');
+        if(el) el.style.transition = 'opacity .25s'; el.style.opacity = '0.96';
+        // do not preventDefault to avoid cross-browser issues with window.open
+      });
+    });
+
+    // small accessibility: focus visible outline
+    document.addEventListener('keydown', (e)=> {
+      if(e.key === 'Tab') document.documentElement.classList.add('show-focus');
+    });
+  </script>
+</body>
+</html>
